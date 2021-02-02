@@ -77,17 +77,15 @@ def generate_distribution(items_distribution: List[int],
     result = items_distribution[0:current_index]
     rest = items_distribution[current_index: m + 1]
     rest.sort()
-    # на место элемента current_index вставляем следующий за ним в порядке
-    # возрастания из rest
-    rest_current_index = rest.index(item_for_change)
-    result.append(rest.pop(rest_current_index + 1))
 
-    # если элемент не последний в своей группе, то добавим еще элементов
-    # следующих за последним добавленным в порядке возрастания из rest пока
-    # не заполним текущую группу
-    if (current_index + 1) % n != 0:
-        for i in range(1, (n-(current_index % n))):
-            result.append(rest.pop(rest_current_index+1))
+    # на место элемента current_index и до тех пор пока не заполним текущую
+    # группу вставляем следующие за ним в порядке возрастания элементы из rest
+    rest_current_index = rest.index(item_for_change)
+
+    for _ in range(n - current_index % n):
+        result.append(rest.pop(rest_current_index + 1))
+
+    # оставшиеся элементы дописываем в конец
     result.extend(rest)
     return result
 
