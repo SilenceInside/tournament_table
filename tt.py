@@ -1,19 +1,21 @@
 # -*- coding: utf-8 -*-
-from operator import add, truediv
 import csv
+import datetime
+from operator import add, truediv
+
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import (QApplication, QComboBox, QDesktopWidget,
                              QFileDialog, QLabel, QLCDNumber, QMainWindow,
                              QPushButton, QSlider, QSpinBox, QWidget,
                              QHBoxLayout, QVBoxLayout, QTableWidgetItem,
                              QAction, qApp, QSizePolicy)
+
 from settings import Settings
 from table_model import ParticipantTable, ResultTable
 from comb_algorithm import main
-# from snake_with_lexical_alg import snake_plus_bruteforce as main
 # from group_by_group import main
+# from snake_with_lexical_alg import snake_plus_bruteforce as main
 # from random_search import main
-import datetime
 
 
 class MainWindow(QMainWindow):
@@ -71,7 +73,7 @@ class MainWindow(QMainWindow):
 
     def load_csv(self):
         """Загружает данные игроков из csv файла в таблицу."""
-        file_name, _ = QFileDialog.getOpenFileName(None, "Загрузить список участников",
+        file_name, _ = QFileDialog.getOpenFileName(None, "Load players list",
                                                    "", "Csv Files (*.csv);;All Files (*)")
         if file_name:
             for _ in range(self.table.rowCount()):
@@ -87,7 +89,7 @@ class MainWindow(QMainWindow):
 
     def save_csv(self):
         """Сохраняет данные игроков из таблицы в csv файл."""
-        file_name, _ = QFileDialog.getSaveFileName(None, "Сохранить список участников", "",
+        file_name, _ = QFileDialog.getSaveFileName(None, "Save players list", "",
                                                    "Csv Files (*.csv);; All Files (*)")
         if file_name:
             content = self.table.parse_for_csv()
@@ -97,8 +99,8 @@ class MainWindow(QMainWindow):
 
     def setupUI(self):
         """Инициализирует макет главного окна."""
-        self.init_table_1()
-        self.init_widget_2()
+        self.init_players_table_widget()
+        self.init_parameter_selection_widget()
 
         self.alpha_1 = 0.5
         self.alpha_2 = 0.5
@@ -109,7 +111,7 @@ class MainWindow(QMainWindow):
 
         self.central_widget.setLayout(vbox)
 
-    def init_table_1(self):
+    def init_players_table_widget(self):
         """Строит таблицу участников с кнопками и надписью."""
         self.widget_1 = QWidget(self.central_widget)
 
@@ -136,7 +138,7 @@ class MainWindow(QMainWindow):
 
         self.widget_1.setLayout(layout)
 
-    def init_widget_2(self):
+    def init_parameter_selection_widget(self):
         """Создает виджет выбора количества групп."""
         self.widget_2 = QWidget(self.central_widget)
 
@@ -414,14 +416,3 @@ class ResultWindow(QMainWindow):
         """Заполняет таблицу результатов выбранным решением."""
         cur_index = self.choice_box.currentIndex()
         self.show_result(self.distributions[cur_index])
-
-
-if __name__ == '__main__':
-    import sys
-
-    app = QApplication(sys.argv)
-
-    ui = MainWindow()
-    ui.show()
-
-    sys.exit(app.exec_())

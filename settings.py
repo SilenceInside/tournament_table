@@ -1,4 +1,3 @@
-# Настройки для tt1.py
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QFont, QIcon
 
@@ -8,7 +7,7 @@ class Settings:
         # Настройки центрального виджета
         self.font = QFont('SansSerif', 10)
         self.size = QSize(800, 600)
-        self.minimum_size = QSize(460, 395)
+        self.minimum_size = QSize(800, 600)
         self.window_title = "Tournament table"
         self.window_icon = QIcon('icon.png')
         self.result_window_title = "Result"

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from typing import List
 
 
 def main(m, k):
@@ -6,6 +7,8 @@ def main(m, k):
     Создает список всех возможных комбинаций размещения
     m элементов на k групп без повторений. В каждой группе
     находится m/k элементов.
+    :param m: количество элементов
+    :param k: количество групп, на которое нужно разделить m
     :return [   [(), (), ()],
                 [(), (), ()],
                 [(), (), ()]
@@ -14,54 +17,77 @@ def main(m, k):
 
     n = int(m / k)
     # Генерация списка для решений и первого решения
-    distribution_of_elements = [[x for x in range(1, m+1)]]
+    distributions_list = [[x for x in range(1, m+1)]]
 
     current_index = m - 1
     while current_index != 0:
-        if ((n + current_index) % n) == 0:
+        if (n + current_index) % n == 0:
             current_index -= 1
         else:
-            if is_biggest(distribution_of_elements[-1], current_index, n, m):
+            if is_biggest(distributions_list[-1], current_index, n, m):
                 current_index -= 1
             else:
-                distribution_of_elements.append(generate_distribution(
-                distribution_of_elements[-1], current_index, n, m))
+                distributions_list.append(generate_distribution(
+                    distributions_list[-1], current_index, n, m))
                 current_index = m - n - 1
     distribution = []
-    for i in distribution_of_elements:
+    for i in distributions_list:
         distribution.append(group_separation(i, n, k))
     return distribution
 
 
-def is_biggest(distribution_of_elements, current_index, n, m):
+def is_biggest(items_distribution: List[int],
+               current_index: int,
+               n: int,
+               m: int = 0) -> bool:
     """
     Проверяет является элемент с индексом current_index наибольшим
     из последующих элементов.
+    :param items_distribution: список натуральных чисел
+    :param current_index: индекс проверяемого элемента в в items_distribution
+    :param n: количество элементов в одной группе
+    :param m: количество элементов в списке
     """
 
     group_number = (current_index // n) + 1
-    last_part = distribution_of_elements[(group_number * n): (m + 1)]
-    new_R = distribution_of_elements[current_index]
+    last_part = items_distribution[(group_number * n)::]
+    compared_element = items_distribution[current_index]
     for i in last_part:
-        if new_R < i:
+        if compared_element < i:
             return False
     return True
 
 
-def generate_distribution(distribution_of_elements, current_index, n, m):
-    """Генерирует новое распределение элементов."""
-    r = distribution_of_elements[current_index]
-    result = distribution_of_elements[0:current_index]
-    rest = distribution_of_elements[current_index : m+1]
+def generate_distribution(items_distribution: List[int],
+                          current_index: int,
+                          n: int,
+                          m: int) -> List[int]:
+    """
+    Генерирует новое распределение элементов.
+    Оно строится на основе передаваемого распределения и индекса элемента,
+    который необходимо изменить.
+    :param items_distribution: распределение элементов
+    :param current_index: индекс элемента в items_distribution, с которого
+    строится новое распределение
+    :param n: количество элементов в одной группе
+    :param m: количество элементов в списке
+    """
+    item_for_change = items_distribution[current_index]
+    # элементы до current_index сохраняют порядок
+    result = items_distribution[0:current_index]
+    rest = items_distribution[current_index: m + 1]
     rest.sort()
-    index_f = rest.index(r)
-    result.append(rest[index_f+1])
-    rest.pop(index_f + 1)
-    if ((current_index + 1) % n) != 0:
-        elementAfter_f = []
+    # на место элемента current_index вставляем следующий за ним в порядке
+    # возрастания из rest
+    rest_current_index = rest.index(item_for_change)
+    result.append(rest.pop(rest_current_index + 1))
+
+    # если элемент не последний в своей группе, то добавим еще элементов
+    # следующих за последним добавленным в порядке возрастания из rest пока
+    # не заполним текущую группу
+    if (current_index + 1) % n != 0:
         for i in range(1, (n-(current_index % n))):
-            elementAfter_f.append(rest.pop(index_f+1))
-        result.extend(elementAfter_f)
+            result.append(rest.pop(rest_current_index+1))
     result.extend(rest)
     return result
 
