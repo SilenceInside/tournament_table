@@ -28,6 +28,7 @@ class Settings:
         self.label_4_text = "Select:"
         self.label_5_text = "Rating"
         self.label_6_text = "Association"
+        self.label_alg_text = "Select algorithm:"
 
         # Кнопки
         self.add_btn_text = "Add"

@@ -14,7 +14,7 @@
 from itertools import combinations as comb
 from math import ceil
 
-from comb_algorithm import main as comb_alg
+from .comb_algorithm import main as comb_alg
 
 
 def main(m: int, k: int, premade_group_count: int, player_data):

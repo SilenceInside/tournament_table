@@ -29,7 +29,7 @@ snake_plus_bruteforce(12, 3, 5)
 ]
 """
 from typing import List, Tuple
-from comb_algorithm import main as comb_alg
+from .comb_algorithm import main as comb_alg
 
 
 def snake_plus_bruteforce(m: int, k: int, num: int = 0) -> List[List[Tuple[int]]]:

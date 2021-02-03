@@ -12,10 +12,12 @@ from PyQt5.QtWidgets import (QApplication, QComboBox, QDesktopWidget,
 
 from settings import Settings
 from table_model import ParticipantTable, ResultTable
+
 # from comb_algorithm import main
-from group_by_group import main
+from algorithms.group_by_group import main
 # from snake_with_lexical_alg import snake_plus_bruteforce as main
 # from random_search import main
+CHOICES = ['Brute force', 'Group by group', 'snake with brute force']
 
 
 class MainWindow(QMainWindow):
@@ -144,12 +146,14 @@ class MainWindow(QMainWindow):
 
         label = QLabel(self.settings.label_2_text, self.widget_2)
 
-        build_btn = QPushButton(self.settings.build_btn_text, self.widget_2)
-        build_btn.clicked.connect(self.build_result_table)
-
         self.spinbox = QSpinBox(self.widget_2)
         self.spinbox.setMinimum(2)
         self.spinbox.setMaximum(20)
+
+        alg_label = QLabel(self.settings.label_alg_text, self.widget_2)
+        self.alg_combobox = QComboBox(self.widget_2)
+        for item in CHOICES:
+            self.alg_combobox.addItem(item)
 
         self.sld = self.init_slider_widget()
 
@@ -159,11 +163,18 @@ class MainWindow(QMainWindow):
         self.lcd_1 = self.init_lcd()
         self.lcd_2 = self.init_lcd()
 
+        build_btn = QPushButton(self.settings.build_btn_text, self.widget_2)
+        build_btn.clicked.connect(self.build_result_table)
+
         layout = QHBoxLayout()
         layout.addWidget(label)
         layout.addWidget(self.spinbox)
-        layout.addWidget(build_btn)
         layout.setAlignment(QtCore.Qt.AlignCenter)
+
+        layout_alg = QHBoxLayout()
+        layout_alg.addWidget(alg_label)
+        layout_alg.addWidget(self.alg_combobox)
+        layout_alg.setAlignment(QtCore.Qt.AlignCenter)
 
         layout_sld = QHBoxLayout()
         layout_sld.addWidget(label1)
@@ -175,7 +186,9 @@ class MainWindow(QMainWindow):
 
         layout_f = QVBoxLayout()
         layout_f.addLayout(layout)
+        layout_f.addLayout(layout_alg)
         layout_f.addLayout(layout_sld)
+        layout_f.addWidget(build_btn)
         self.widget_2.setLayout(layout_f)
 
     @staticmethod
