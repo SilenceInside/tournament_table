@@ -14,8 +14,10 @@
 from itertools import combinations as comb
 from math import ceil
 
+from comb_algorithm import main as comb_alg
 
-def main(m, k, appr_gr_count, player_list):
+
+def main(m: int, k: int, premade_group_count: int, player_data):
     """
     Строит наиболее оптимальные распределения элементов по группам.
 
@@ -25,12 +27,15 @@ def main(m, k, appr_gr_count, player_list):
     комбинации и дописываются к ранее полученным.
     :param m: число всех элементов
     :param k: число групп
-    :param appr_gr_count: количество групп для предварительного рассчета
-    :param player_dict: словарь с информацией о элементах
+    :param premade_group_count: количество групп для предварительного рассчета
+    :param player_data: словарь или список с информацией о элементах
     """
-    player_dict = dict()
-    for i in range(len(player_list)):
-        player_dict[i+1] = {'name': player_list[i][0], 'rating': player_list[i][1], 'assoc': player_list[i][2]}
+    if type(player_data) == dict:
+        player_dict = player_data
+    else:
+        player_dict = dict()
+        for i in range(len(player_data)):
+            player_dict[i+1] = {'name': player_data[i][0], 'rating': player_data[i][1], 'assoc': player_data[i][2]}
 
     def calc_average_group_rating():
         """Вычисляет средний рейтинг групп."""
@@ -73,7 +78,7 @@ def main(m, k, appr_gr_count, player_list):
                 return False
         return True
 
-    for _ in range(appr_gr_count):
+    for _ in range(premade_group_count):
 
         threshold_assoc = dict()  # лимит участников от ассоциации в одной группе
         for k, v in assoc_count.items():
@@ -108,82 +113,6 @@ def main(m, k, appr_gr_count, player_list):
             combination.insert(0, premade_group)
 
     return combinations
-
-
-def comb_alg(m, k, list_of_numbers=None):
-    """
-    Создает список всех размещений m элементов на k групп без повторений.
-
-    В каждой группе находится m/k элементов.
-    :param m: число всех элементов
-    :param k: число групп
-    :param list_of_numbers: список элементов для перебора
-    :return [   [[], [], [],
-                [[], [], []],
-                [[], [], []]
-            ]
-    """
-    # Генерация списка для решений и первого решения
-    if list_of_numbers:
-        distribution_of_elements = [list_of_numbers]
-    else:
-        distribution_of_elements = [[x for x in range(1, m + 1)]]
-    m = len(distribution_of_elements[0])
-    n = int(m / k)
-    current_index = m - 1
-    while current_index:
-        if ((n + current_index) % n) == 0:
-            current_index -= 1
-        else:
-            if is_biggest(distribution_of_elements[-1], current_index, n, m):
-                current_index -= 1
-            else:
-                distribution_of_elements.append(generate_distribution(
-                    distribution_of_elements[-1], current_index, n, m))
-                current_index = m - n - 1
-
-    distribution = [group_separation(i, n, k)
-                    for i in distribution_of_elements]
-    return distribution
-
-
-def is_biggest(distribution_of_elements, current_index, n, m):
-    """Проверяет является элемент с индексом current_index наибольшим."""
-    group_number = (current_index // n) + 1
-    last_part = distribution_of_elements[(group_number * n): (m + 1)]
-    new_R = distribution_of_elements[current_index]
-    for i in last_part:
-        if new_R < i:
-            return False
-    return True
-
-
-def generate_distribution(distribution_of_elements, current_index, n, m):
-    """Генерирует новое распределение элементов."""
-    r = distribution_of_elements[current_index]
-    result = distribution_of_elements[0:current_index]
-    rest = distribution_of_elements[current_index: m + 1]
-    rest.sort()
-
-    index_f = rest.index(r)
-    result.append(rest.pop(index_f + 1))
-
-    if ((current_index + 1) % n):
-        elementAfter_f = []
-        for i in range(1, (n - (current_index % n))):
-            elementAfter_f.append(rest.pop(index_f + 1))
-        result.extend(elementAfter_f)
-
-    result.extend(rest)
-    return result
-
-
-def group_separation(elements_distribution, n, k):
-    """Отделяет группы элементов."""
-    result = []
-    for i in range(k):
-        result.append(list(elements_distribution[n * i:n * i + n]))
-    return result
 
 
 def calculate_criterion(obj):

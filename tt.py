@@ -12,8 +12,8 @@ from PyQt5.QtWidgets import (QApplication, QComboBox, QDesktopWidget,
 
 from settings import Settings
 from table_model import ParticipantTable, ResultTable
-from comb_algorithm import main
-# from group_by_group import main
+# from comb_algorithm import main
+from group_by_group import main
 # from snake_with_lexical_alg import snake_plus_bruteforce as main
 # from random_search import main
 
@@ -315,9 +315,9 @@ class MainWindow(QMainWindow):
         a = datetime.datetime.now()
         self.players_data = self.table.parse_table(self.settings)
         group_count = self.spinbox.value()
-        distributions = main(len(self.players_data), group_count)  # brute force
+        # distributions = main(len(self.players_data), group_count)  # brute force
         # distributions = main(len(self.players_data), group_count, 2)  # snake
-        # distributions = main(len(self.players_data), group_count, 1, self.players_data)  # group ny group
+        distributions = main(len(self.players_data), group_count, 1, self.players_data)  # group ny group
         # distributions = main(len(self.players_data), group_count, deep=1, comb_range=5)
         criterion_list = self.calculate_criterion(distributions)
         self.result_window = ResultWindow(distributions, self.players_data, group_count,

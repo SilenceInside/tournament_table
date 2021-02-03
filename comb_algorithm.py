@@ -1,23 +1,30 @@
 # -*- coding: utf-8 -*-
-from typing import List
+from typing import List, Tuple
 
 
-def main(m, k):
+def main(m: int, k: int, items_list: List[int] = None) -> List[List[Tuple[int]]]:
     """
     Создает список всех возможных комбинаций размещения
     m элементов на k групп без повторений. В каждой группе
     находится m/k элементов.
     :param m: количество элементов
     :param k: количество групп, на которое нужно разделить m
+    :param items_list: список чисел, которые будут использоваться вместо
+    значений по-умолчанию от 1 до m
     :return [   [(), (), ()],
                 [(), (), ()],
                 [(), (), ()]
             ]
     """
 
-    n = int(m / k)
+    n = int(m / k) # количество элементов в каждой группе
     # Генерация списка для решений и первого решения
-    distributions_list = [[x for x in range(1, m+1)]]
+    if items_list and len(items_list) == m:
+        first_distribution = sorted(list(items_list))
+    else:
+        first_distribution = [x for x in range(1, m+1)]
+
+    distributions_list = [first_distribution]
 
     current_index = m - 1
     while current_index != 0:
@@ -90,9 +97,15 @@ def generate_distribution(items_distribution: List[int],
     return result
 
 
-def group_separation(elements_distribution, n, k):
-    """Отделяет группы элементов."""
+def group_separation(items_distribution: List[int], n: int, k: int) -> List[Tuple[int]]:
+    """
+    Отделяет группы элементов по n элемементов на k групп.
+    :param items_distribution: Список элементов
+    :param n: количество элементов в одной группе
+    :param k: количество групп
+    :return: items_distribution разделенный на k кортежей
+    """
     result = []
     for i in range(k):
-        result.append(tuple(elements_distribution[n*i:n*i+n]))
+        result.append(tuple(items_distribution[n * i:n * i + n]))
     return result
