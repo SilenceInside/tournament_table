@@ -17,7 +17,7 @@ def main(m: int, k: int, items_list: List[int] = None) -> List[List[Tuple[int]]]
             ]
     """
 
-    n = int(m / k) # количество элементов в каждой группе
+    n = int(m / k)  # количество элементов в каждой группе
     # Генерация списка для решений и первого решения
     if items_list and len(items_list) == m:
         first_distribution = sorted(list(items_list))
