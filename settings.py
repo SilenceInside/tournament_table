@@ -21,7 +21,7 @@ class Settings:
 
         # Надписи
         self.label_1_font = QFont('SansSerif', 12)
-        self.label_1_text = "List of participants"
+        self.label_1_text = "Players"
         self.label_2_text = "Select the number of groups:"
         self.label_3_font = self.label_1_font
         self.label_3_text = "Distribution of participants"
@@ -29,6 +29,10 @@ class Settings:
         self.label_5_text = "Rating"
         self.label_6_text = "Association"
         self.label_alg_text = "Select algorithm:"
+        self.label_premade_group_count = "Premade group count:"
+        self.label_snake_brute_force = "Number of items  disturbed by snake at each group:"
+        self.label_random_search_1 = "Deep:"
+        self.label_random_search_2 = "Range:"
 
         # Кнопки
         self.add_btn_text = "Add"

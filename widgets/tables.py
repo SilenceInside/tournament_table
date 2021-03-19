@@ -1,5 +1,5 @@
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem, QWidget
+from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem
 
 
 class ParticipantTable(QTableWidget):
@@ -44,15 +44,17 @@ class ParticipantTable(QTableWidget):
             self.setItem(index_for_row, i+1, item)
 
     def del_selected_row(self):
-        """Удаляет строки выделенного диапазона."""
+        """Удаляет строки выделенного диапазона.
+        Удаляет последнюю строку, если ничего не выбрано."""
         selected_items = self.selectedItems()
         # Условие, чтобы не закрылось приложение, когда ничего не выбрано
         if not selected_items:
-            return 0
-        upper_row = selected_items[0].row()
-        bottom_row = selected_items[-1].row()
-        for _ in range(upper_row, bottom_row + 1):
-            self.removeRow(upper_row)
+            self.removeRow(self.rowCount() - 1)
+        else:
+            upper_row = selected_items[0].row()
+            bottom_row = selected_items[-1].row()
+            for _ in range(upper_row, bottom_row + 1):
+                self.removeRow(upper_row)
 
     def parse_table(self, settings):
         """Парсит данные из таблицы."""
@@ -103,8 +105,10 @@ class ResultTable(QTableWidget):
         self.clear()
         self.setRowCount(len(distr[0])+1)
         self.setColumnCount(len(distr))
+        self.setSizeAdjustPolicy(2)
         self.init_header(len(distr))
         self.insert_players(distr, players_list)
+        self.resizeColumnsToContents()
 
     def init_header(self, num):
         """Создает заголовки с номером для каждой группы."""
@@ -123,4 +127,4 @@ class ResultTable(QTableWidget):
                 sum_rating += players_list[player-1][1]
             item = QTableWidgetItem(str(sum_rating))
             item.setTextAlignment(Qt.AlignCenter)
-            self.setItem(p+1, g, item)
+            self.setItem(p + 1, g, item)
